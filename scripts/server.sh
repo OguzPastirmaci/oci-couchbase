@@ -59,34 +59,34 @@ vm.swappiness = 0
 DEVICE="/dev/sdb"
 MOUNTPOINT="/mnt/datadisk"
 
-while [ ! -d "$MOUNTPOINT" ]; do
+while [ ! -e "$DEVICE" ]; do
     sleep 30
 done
 
-echo "Creating partition"
-printf "o\nn\np\n1\n\n\nw\n" | fdisk "$DEVICE"
+DEVICE=/dev/sdb
+MOUNTPOINT=/mnt/datadisk
 
-echo "Creating filesystem"
-mkfs -t ext4 "${DEVICE}1"
+  echo "Creating the filesystem."
+  mkfs -t ext4 -F ${DEVICE}
 
-echo "Updating fstab"
-LINE="${DEVICE}\t${MOUNTPOINT}\text4\tdefaults,nofail\t0\t2"
-echo -e ${LINE} >> /etc/fstab
+  echo "Updating fstab"
+  LINE="${DEVICE}\t${MOUNTPOINT}\text4\tdefaults,nofail\t0\t2"
+  echo -e ${LINE} >> /etc/fstab
 
-echo "Mounting the disk"
-mkdir $MOUNTPOINT
-mount -a
+  echo "Mounting the disk"
+  mkdir $MOUNTPOINT
+  mount -a
 
-echo "Changing permissions"
-chown couchbase $MOUNTPOINT
-chgrp couchbase $MOUNTPOINT
+  echo "Changing permissions"
+  chown couchbase $MOUNTPOINT
+  chgrp couchbase $MOUNTPOINT
 
 #######################################################
 ############## Configure Couchbase Server #############
 #######################################################
 echo "Configuring Couchbase Server..."
 
-rallyDNS="group1.couchbase.couchbase.oraclevcn.com"
+rallyDNS="data.couchbase.couchbase.oraclevcn.com"
 nodeDNS=$(hostname).couchbase.couchbase.oraclevcn.com
 #nodeDNS+=".couchbase.couchbase.oraclevcn.com"
 #services="data,index,query,fts,analytics,eventing"

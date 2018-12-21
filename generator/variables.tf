@@ -14,7 +14,7 @@ variable "availability_domain" {
   default = "YVsm:US-ASHBURN-AD-3"
 }
 variable "block_size" {
-  default = "1000"
+  default = "1024"
 }
 
 variable "NumIscsiVolumesPerInstance" {

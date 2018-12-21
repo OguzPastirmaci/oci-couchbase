@@ -10,3 +10,4 @@ generator/provider.tf
 generator/generated.tf
 
 settings.json
+generator/.DS_Store
