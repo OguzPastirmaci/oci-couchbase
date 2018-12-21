@@ -13,8 +13,10 @@ echo "Turning off the Firewall..."
 service firewalld stop
 chkconfig firewalld off
 
-source util.sh	
-formatDataDisk
+# Creating partition and filesystem
+DEVICE="/dev/sdb"
+printf "o\nn\np\n1\n\n\nw\n" | fdisk "$DEVICE"
+mkfs.ext4 "${DEVICE}1"
 
 #######################################################"
 ############## Install Couchbase Server ###############"
@@ -132,8 +134,3 @@ else
   done
 
 fi
-
-# Creating partition and filesystem
-DEVICE="/dev/sdb"
-printf "o\nn\np\n1\n\n\nw\n" | fdisk "$DEVICE"
-mkfs.ext4 "${DEVICE}1"
