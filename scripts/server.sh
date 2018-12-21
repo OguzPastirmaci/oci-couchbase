@@ -55,6 +55,32 @@ echo "
 vm.swappiness = 0
 " >> /etc/sysctl.conf
 
+# Creating partition and filesystem
+DEVICE="/dev/sdb"
+MOUNTPOINT="/mnt/datadisk"
+
+while [ ! -d "$MOUNTPOINT" ]; do
+    sleep 30
+done
+
+echo "Creating partition"
+printf "o\nn\np\n1\n\n\nw\n" | fdisk "$DEVICE"
+
+echo "Creating filesystem"
+mkfs -t ext4 "${DEVICE}1"
+
+echo "Updating fstab"
+LINE="${DEVICE}\t${MOUNTPOINT}\text4\tdefaults,nofail\t0\t2"
+echo -e ${LINE} >> /etc/fstab
+
+echo "Mounting the disk"
+mkdir $MOUNTPOINT
+mount -a
+
+echo "Changing permissions"
+chown couchbase $MOUNTPOINT
+chgrp couchbase $MOUNTPOINT
+
 #######################################################
 ############## Configure Couchbase Server #############
 #######################################################
@@ -131,25 +157,3 @@ else
   done
 
 fi
-
-# Creating partition and filesystem
-DEVICE="/dev/sdb"
-MOUNTPOINT="/mnt/datadisk"
-
-echo "Creating partition"
-printf "o\nn\np\n1\n\n\nw\n" | fdisk "$DEVICE"
-
-echo "Creating filesystem"
-mkfs -t ext4 "${DEVICE}1"
-
-echo "Updating fstab"
-LINE="${DEVICE}\t${MOUNTPOINT}\text4\tdefaults,nofail\t0\t2"
-echo -e ${LINE} >> /etc/fstab
-
-echo "Mounting the disk"
-mkdir $MOUNTPOINT
-mount -a
-
-echo "Changing permissions"
-chown couchbase $MOUNTPOINT
-chgrp couchbase $MOUNTPOINT
