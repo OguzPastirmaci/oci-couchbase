@@ -13,11 +13,6 @@ echo "Turning off the Firewall..."
 service firewalld stop
 chkconfig firewalld off
 
-# Creating partition and filesystem
-DEVICE="/dev/sdb"
-printf "o\nn\np\n1\n\n\nw\n" | fdisk "$DEVICE"
-mkfs.ext4 "${DEVICE}1"
-
 #######################################################"
 ############## Install Couchbase Server ###############"
 #######################################################"
@@ -134,3 +129,25 @@ else
   done
 
 fi
+
+# Creating partition and filesystem
+DEVICE="/dev/sdb"
+MOUNTPOINT="/mnt/datadisk"
+
+echo "Creating partition"
+printf "o\nn\np\n1\n\n\nw\n" | fdisk "$DEVICE"
+
+echo "Creating filesystem"
+mkfs -t ext4 "${DEVICE}1"
+
+echo "Updating fstab"
+LINE="${DEVICE}\t${MOUNTPOINT}\text4\tdefaults,nofail\t0\t2"
+echo -e ${LINE} >> /etc/fstab
+
+echo "Mounting the disk"
+mkdir $MOUNTPOINT
+mount -a
+
+echo "Changing permissions"
+chown couchbase $MOUNTPOINT
+chgrp couchbase $MOUNTPOINT
