@@ -3,20 +3,20 @@ syncGatewayVersion: 2.0.0
 cluster:
   - group: group1
     nodeCount: 4
-    nodeType: VM.Standard2.4
+    nodeType: BM.Standard.E2.64
     dataDiskSize: 100
     services:
       - data
   - group: group2
     nodeCount: 2
-    nodeType: VM.Standard2.4
+    nodeType: BM.Standard.E2.64
     dataDiskSize: 100
     services:
       - query
       - index
   - group: group3
     nodeCount: 0
-    nodeType: VM.Standard2.4
+    nodeType: BM.Standard.E2.64
     dataDiskSize: 100
     services:
       - analytics
